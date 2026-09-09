@@ -1,0 +1,6 @@
+	2026-09-08T12:31:16Z Starting OTC price API fetch
+	2026-09-08T12:31:16Z Fetching with limitMax=987654 and offset=0 -> ./2026-09-08/price-api-response_00000.json
+	2026-09-08T12:31:24Z Stats: count=6099, maxPages=1, recordsPerPage=99999
+	2026-09-08T12:31:24Z Will fetch 1 pages in total...
+	2026-09-08T12:31:24Z Converting file to csv: ./2026-09-08/price-api-response_00000.csv
+	2026-09-08T12:31:24Z Done

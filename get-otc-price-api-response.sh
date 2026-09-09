@@ -132,11 +132,31 @@ convert_to_csv() {
   jq -r '.response.result | to_entries as $g | ($g[0].value[0] | keys_unsorted) as $cols | ($cols | @csv), ( $g[] | .value[] | [ .[$cols[]] ] | @csv )' "${OUT_DIR}/price-api-response_00000.json" > "${OUT_DIR}/price-api-response_00000.csv"
 }
 
+keep_if_changed() {
+  local arr md5s nr
+  log "Checking for changes vs. recorded data in ${OUT_DIR}/price-api-response_00000.csv"
+  mapfile arr -t < <(find . -name price-api-response_00000.csv)
+  log "md5sum of all csv files found:"
+  md5sum ${arr[@]}
+  mapfile md5s -t < <(md5sum ${arr[@]} | awk '{print $1}')
+  nr="${#md5s[@]}"
+  if [[ ${md5s[$((nr-1))]} != ${md5s[$((nr-2))]} ]]; then
+    log "Keeping ${OUT_DIR}/price-api-response_00000.json"
+    git config --local user.name  "github-actions[bot]"
+    git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    git add -A
+    git commit -am "update with changes from $CURR_DATE"
+    git push
+  fi
+}
+
 main() {
   log "Starting OTC price API fetch"
   fetch_all_pages
   # combine_results
   convert_to_csv
+  keep_if_changed
   log "Done"
 }
 

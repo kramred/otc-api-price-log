@@ -1,0 +1,6 @@
+# macOS System Files
+._*
+.DS_Store
+.DS_Store?
+
+**/.DS_Store

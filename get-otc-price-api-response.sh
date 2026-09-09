@@ -66,7 +66,7 @@ discover_stats() {
   padded=$(printf "%0*d" "${PADDING_WIDTH}" 0)
 
   local out_file="${OUT_DIR}/price-api-response_${padded}.json"
-  mv -vn $first_file $out_file # adjust padding of first file if needed
+  [[ $first_file != $out_file ]] &&  mv -vn $first_file $out_file # adjust padding of first file if needed
 
   log "Stats: count=${count}, maxPages=${max_pages}, recordsPerPage=${records_per_page}"
 
@@ -135,8 +135,9 @@ convert_to_csv() {
 keep_if_changed() {
   local arr md5s nr
   log "Checking for changes vs. recorded data in ${OUT_DIR}/price-api-response_00000.csv"
-  mapfile arr -t < <(find . -name price-api-response_00000.csv)
+  mapfile arr -t < <(find ./*/ -name price-api-response_00000.csv)
   log "md5sum of all csv files found:"
+  echo 
   md5sum ${arr[@]}
   mapfile md5s -t < <(md5sum ${arr[@]} | awk '{print $1}')
   nr="${#md5s[@]}"
